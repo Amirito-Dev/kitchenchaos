@@ -3,14 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CuttingCounter : BaseCounter
+public class CuttingCounter : BaseCounter, IHasProgress
 {
 
-    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
-    public class OnProgressChangedEventArgs: EventArgs
-    {
-        public float progressNormalized;
-    }
+    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
 
     public event EventHandler OnCut;
 
@@ -29,7 +25,7 @@ public class CuttingCounter : BaseCounter
             OnCut?.Invoke(this, EventArgs.Empty);
             CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().KitchenObjectSO);
 
-            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
             {
                 progressNormalized = (float)cuttingProgress / GetCuttingRecipeSOWithInput(GetKitchenObject().KitchenObjectSO).cuttingProgressMax
             });
@@ -46,7 +42,7 @@ public class CuttingCounter : BaseCounter
 
     private void Update()
     {
-        Debug.Log(String.Format("Has kitchen object : {0}", HasKitchenObject()));
+        //Debug.Log(String.Format("Has kitchen object : {0}", HasKitchenObject()));
     }
 
     private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSO)
@@ -97,7 +93,7 @@ public class CuttingCounter : BaseCounter
                 {
                     player.GetKitchenObject().SetKitchenObjectParent(this);
                     cuttingProgress = 0;
-                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
                     {
                         progressNormalized = (float)cuttingProgress / GetCuttingRecipeSOWithInput(GetKitchenObject().KitchenObjectSO).cuttingProgressMax
                     });
@@ -109,7 +105,7 @@ public class CuttingCounter : BaseCounter
             // Give the kitchen object to the player if he not already has a kitchen object
             if (!player.HasKitchenObject())
             {
-                OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
                 {
                     progressNormalized = 0
                 });
