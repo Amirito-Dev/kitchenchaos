@@ -27,7 +27,6 @@ public class KitchenObject : MonoBehaviour
 
         kitchenObjectParent = newKitchenObjectParent;
 
-        // If the counter not already contain a kitchen object
         if (kitchenObjectParent.HasKitchenObject())
         {
             Debug.LogError(string.Format("IKitchenObjectParent already has a kitchenObject!"));
@@ -40,6 +39,23 @@ public class KitchenObject : MonoBehaviour
 
         // Place it to (0, 0, 0) relatively to the parent
         transform.localPosition = Vector3.zero;
+    }
+
+    public void DestroySelf()
+    {
+        kitchenObjectParent.ClearKitchenObject();
+        Destroy(gameObject);
+    }
+
+    public static KitchenObject SpawnKitchenObject(KitchenObjectSO newKitchenObjectSO, IKitchenObjectParent newKitchenObjectParent)
+    {
+        // Spawn a new kitchen object and attach it to the player
+        Transform kitchenObjectTransform = Instantiate(newKitchenObjectSO.prefab);
+        // attach the kitchen object to the player
+        KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+        kitchenObject.SetKitchenObjectParent(newKitchenObjectParent);
+
+        return kitchenObject;
     }
 
 }

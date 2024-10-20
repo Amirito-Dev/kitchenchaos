@@ -43,11 +43,20 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void Start() {
         gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e){
         if(selectedCounter){
             selectedCounter.Interact(this);
+        }
+    }
+
+    private void GameInput_OnInteractAlternateAction(object sender, System.EventArgs e)
+    {
+        if (selectedCounter)
+        {
+            selectedCounter.InteractAlternate(this);
         }
     }
 
@@ -108,7 +117,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if(!canMove){
             // Vérifier si on peut bouger en X
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+            canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
 
             // Si on peut que bouger en X
             if(canMove){
@@ -117,7 +126,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             // Sinon on vérifie peut que bouger en Z (Y)
             else{
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+                canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
 
                 // Si on peut que bouger en Z
                 if(canMove){

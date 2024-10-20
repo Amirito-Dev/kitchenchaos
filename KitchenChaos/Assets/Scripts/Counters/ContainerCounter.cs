@@ -11,14 +11,17 @@ public class ContainerCounter : BaseCounter
     [SerializeField]
     private KitchenObjectSO kitchenObjectSO;
 
+    public override void InteractAlternate(Player player)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void Interact(Player player)
     {
         if (!player.HasKitchenObject())
         {
-            // Spawn a new kitchen object and attach it to the player
-            Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
-            // attach the kitchen object to the player
-            kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(player);
+            KitchenObject.SpawnKitchenObject(kitchenObjectSO, player);
+
             OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
         }
     }
